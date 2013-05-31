@@ -32,10 +32,10 @@
   NSMutableString *string = [NSMutableString string];
   for (NSString *key in self) {
     
-    NSString *keyString = [NSString stringWithFormat:formatString, [key mk_urlEncodedString]];
+    NSString *keyString = [NSString stringWithFormat:formatString, [key urlEncodedString]];
     NSObject *value = [self valueForKey:key];
     if([value isKindOfClass:[NSString class]]) {
-        [string appendFormat:@"%@=%@&", keyString, [((NSString*)value) mk_urlEncodedString]];
+        [string appendFormat:@"%@=%@&", keyString, [((NSString*)value) urlEncodedString]];
     } else if([value isKindOfClass:[NSDictionary class]]) {
         if ([(NSDictionary *)value count] > 0) {
             [string appendFormat:@"%@&", [(NSDictionary *)value urlEncodedKeyValueStringUsingKeyFormat:[keyString stringByAppendingString:@"[%@]"]]];
