@@ -27,16 +27,22 @@
 
 @implementation NSDictionary (RequestEncoding)
 
--(NSString*) urlEncodedKeyValueString {
-  
+-(NSString*) urlEncodedKeyValueStringUsingKeyFormat:(NSString *)formatString {
+    
   NSMutableString *string = [NSMutableString string];
   for (NSString *key in self) {
     
+    NSString *keyString = [NSString stringWithFormat:formatString, [key mk_urlEncodedString]];
     NSObject *value = [self valueForKey:key];
-    if([value isKindOfClass:[NSString class]])
-      [string appendFormat:@"%@=%@&", [key urlEncodedString], [((NSString*)value) urlEncodedString]];
-    else
-      [string appendFormat:@"%@=%@&", [key urlEncodedString], value];
+    if([value isKindOfClass:[NSString class]]) {
+        [string appendFormat:@"%@=%@&", keyString, [((NSString*)value) mk_urlEncodedString]];
+    } else if([value isKindOfClass:[NSDictionary class]]) {
+        if ([(NSDictionary *)value count] > 0) {
+            [string appendFormat:@"%@&", [(NSDictionary *)value urlEncodedKeyValueStringUsingKeyFormat:[keyString stringByAppendingString:@"[%@]"]]];
+        }
+    } else {
+        [string appendFormat:@"%@=%@&", keyString, value];
+    }
   }
   
   if([string length] > 0)
@@ -45,6 +51,9 @@
   return string;
 }
 
+-(NSString*) urlEncodedKeyValueString {
+    return [self urlEncodedKeyValueStringUsingKeyFormat:@"%@"];
+}
 
 -(NSString*) jsonEncodedKeyValueString {
   

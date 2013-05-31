@@ -629,10 +629,7 @@ OSStatus extractIdentityAndTrust(CFDataRef inPKCS12Data,
     
     NSString *option = [self.filesToBePosted count] == 0 ? @"-d" : @"-F";
     if(self.postDataEncoding == MKNKPostDataEncodingTypeURL) {
-      [self.fieldsToBePosted enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        
-        [displayString appendFormat:@" %@ \"%@=%@\"", option, key, obj];
-      }];
+        [displayString appendFormat:@" %@ \'%@\'", option, [self.fieldsToBePosted urlEncodedKeyValueString]];
     } else {
       [displayString appendFormat:@" -d \"%@\"", [self encodedPostDataString]];
     }
@@ -706,13 +703,27 @@ OSStatus extractIdentityAndTrust(CFDataRef inPKCS12Data,
   __block NSUInteger postLength = 0;
   
   [self.fieldsToBePosted enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-    
-    NSString *thisFieldString = [NSString stringWithFormat:
-                                 @"--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@",
-                                 boundary, key, obj];
-    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-retain-cycles"
+    __block NSString* (^buildDispositionString)(id, id);
+    buildDispositionString = [^(id key, id obj){
+        if ([obj isKindOfClass:[NSString class]]) {
+            return [[NSString stringWithFormat:@"--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@\r\n", boundary, key,obj] copy];
+        } else if ([obj isKindOfClass:[NSDictionary class]]) {
+            NSString *result = @"";
+            for (NSString *dictKey in obj) {
+                result = [result stringByAppendingString:
+                          buildDispositionString( [NSString stringWithFormat:@"%@[%@]", key, dictKey],obj[dictKey])];
+            }
+            return [result copy];
+        }
+        return (id) @"";
+    } copy];
+      NSString *thisFieldString = buildDispositionString(key, obj);
+      buildDispositionString = NULL;
+#pragma clang diagnostic pop
+      
     [body appendData:[thisFieldString dataUsingEncoding:[self stringEncoding]]];
-    [body appendData:[@"\r\n" dataUsingEncoding:[self stringEncoding]]];
   }];
   
   [self.filesToBePosted enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
