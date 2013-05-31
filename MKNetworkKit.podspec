@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.summary          =  'ARC ready Networking Framework with built in authentication and HTTP 1.1 caching standards support for iOS 5+ devices.'
   s.homepage         =  'https://github.com/MugunthKumar/MKNetworkKit'
   s.author           =  { 'Mugunth Kumar' => 'mugunth@steinlogic.com' }
-  s.source           =  { :git => 'https://github.com/wao813/MKNetworkKit.git', :tag => '0.87' }
+  s.source           =  { :git => 'https://github.com/wao813/MKNetworkKitLean.git', :tag => '0.87' }
 
   s.source_files     = 'MKNetworkKit/*.{h,m}', 'MKNetworkKit/Categories/*.{h,m}'
   s.ios.exclude_files =  '**/*NSAlert*'
