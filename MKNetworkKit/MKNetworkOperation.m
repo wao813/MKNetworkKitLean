@@ -638,8 +638,17 @@ OSStatus extractIdentityAndTrust(CFDataRef inPKCS12Data,
     [self.filesToBePosted enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
       
       NSDictionary *thisFile = (NSDictionary*) obj;
-      [displayString appendFormat:@" -F \"%@=@%@;type=%@\"", thisFile[@"name"],
-       thisFile[@"filepath"], thisFile[@"mimetype"]];
+        
+        if( [obj isKindOfClass:[NSArray class]] ){
+            for(id o in obj){
+                NSDictionary *newFile = (NSDictionary*)o;
+                [displayString appendFormat:@" -F \"%@=@%@;type=%@\"", newFile[@"name"],
+                 newFile[@"filepath"], newFile[@"mimetype"]];
+            }
+        } else {
+            [displayString appendFormat:@" -F \"%@=@%@;type=%@\"", thisFile[@"name"],
+             thisFile[@"filepath"], thisFile[@"mimetype"]];
+        }
     }];
     
     /* Not sure how to do this via curl
@@ -716,6 +725,12 @@ OSStatus extractIdentityAndTrust(CFDataRef inPKCS12Data,
                           buildDispositionString( [NSString stringWithFormat:@"%@[%@]", key, dictKey],obj[dictKey])];
             }
             return [result copy];
+        } else if ([obj isKindOfClass:[NSArray class]]) {
+            NSString *result = @"";
+            for(id o in obj){
+                result =[result stringByAppendingString:
+                         buildDispositionString( [NSString stringWithFormat:@"[%@]", o],o)];
+            }
         }
         return (id) @"";
     } copy];
