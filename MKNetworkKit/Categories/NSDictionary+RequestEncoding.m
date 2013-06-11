@@ -40,15 +40,7 @@
         if ([(NSDictionary *)value count] > 0) {
             [string appendFormat:@"%@&", [(NSDictionary *)value urlEncodedKeyValueStringUsingKeyFormat:[keyString stringByAppendingString:@"[%@]"]]];
         }
-    }else if ([value isKindOfClass:[NSArray class]]){
-        for(id v in ((NSArray *)value)){
-            if( [v isKindOfClass:[NSString class]] )
-                [string appendFormat:@"%@=%@&", [key mk_urlEncodedString], [((NSString*)v) mk_urlEncodedString]];
-            else
-            [string appendFormat:@"%@=%@&", [key mk_urlEncodedString], value];
-        }
-    }
-    else {
+    } else {
         [string appendFormat:@"%@=%@&", keyString, value];
     }
   }
