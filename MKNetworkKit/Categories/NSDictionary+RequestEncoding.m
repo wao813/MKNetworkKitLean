@@ -43,9 +43,9 @@
     }else if ([value isKindOfClass:[NSArray class]]){
         for(id v in ((NSArray *)value)){
             if( [v isKindOfClass:[NSString class]] )
-                [string appendFormat:@"%@=%@&", [key mk_urlEncodedString], [((NSString*)v) mk_urlEncodedString]];
+                [string appendFormat:@"%@=%@&", [key urlEncodedString], [((NSString*)v) urlEncodedString]];
             else
-            [string appendFormat:@"%@=%@&", [key mk_urlEncodedString], value];
+            [string appendFormat:@"%@=%@&", [key urlEncodedString], value];
         }
     }
     else {
