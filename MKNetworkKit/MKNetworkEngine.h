@@ -32,7 +32,7 @@
 /*!
  *  @class MKNetworkEngine
  *  @abstract Represents a subclassable Network Engine for your app
- *  
+ *
  *  @discussion
  *	This class is the heart of MKNetworkEngine
  *  You create network operations and enqueue them here
@@ -43,32 +43,32 @@
 
 /*!
  *  @abstract Initializes your network engine with a hostname
- *  
+ *
  *  @discussion
  *	Creates an engine for a given host name
  *  The hostname parameter is optional
  *  The hostname, if not null, initializes a Reachability notifier.
  *  Network reachability notifications are automatically taken care of by MKNetworkEngine
- *  
+ *
  */
 - (id) initWithHostName:(NSString*) hostName;
 
 /*!
  *  @abstract Initializes your network engine with a hostname and custom header fields
- *  
+ *
  *  @discussion
  *	Creates an engine for a given host name
  *  The default headers you specify here will be appened to every operation created in this engine
  *  The hostname, if not null, initializes a Reachability notifier.
  *  Network reachability notifications are automatically taken care of by MKNetworkEngine
  *  Both parameters are optional
- *  
+ *
  */
 - (id) initWithHostName:(NSString*) hostName customHeaderFields:(NSDictionary*) headers;
 
 /*!
  *  @abstract Initializes your network engine with a hostname
- *  
+ *
  *  @discussion
  *	Creates an engine for a given host name
  *  The hostname parameter is optional
@@ -76,38 +76,38 @@
  *  The apiPath is prefixed to every call to operationWithPath: You can use this method if your server's API location is not at the root (/)
  *  The hostname, if not null, initializes a Reachability notifier.
  *  Network reachability notifications are automatically taken care of by MKNetworkEngine
- *  
+ *
  */
 - (id) initWithHostName:(NSString*) hostName apiPath:(NSString*) apiPath customHeaderFields:(NSDictionary*) headers;
 
 /*!
  *  @abstract Creates a simple GET Operation with a request URL
- *  
+ *
  *  @discussion
  *	Creates an operation with the given URL path.
  *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
  *  The HTTP Method is implicitly assumed to be GET
- *  
+ *
  */
 
 -(MKNetworkOperation*) operationWithPath:(NSString*) path;
 
 /*!
  *  @abstract Creates a simple GET Operation with a request URL and parameters
- *  
+ *
  *  @discussion
  *	Creates an operation with the given URL path.
  *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
  *  The body dictionary in this method gets attached to the URL as query parameters
  *  The HTTP Method is implicitly assumed to be GET
- *  
+ *
  */
 -(MKNetworkOperation*) operationWithPath:(NSString*) path
-                         params:(NSDictionary*) body;
+                                  params:(NSDictionary*) body;
 
 /*!
  *  @abstract Creates a simple GET Operation with a request URL, parameters and HTTP Method
- *  
+ *
  *  @discussion
  *	Creates an operation with the given URL path.
  *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
@@ -116,12 +116,12 @@
  *  The HTTP Method is implicitly assumed to be GET
  */
 -(MKNetworkOperation*) operationWithPath:(NSString*) path
-                         params:(NSDictionary*) body
-                   httpMethod:(NSString*)method;
+                                  params:(NSDictionary*) body
+                              httpMethod:(NSString*)method;
 
 /*!
  *  @abstract Creates a simple GET Operation with a request URL, parameters, HTTP Method and the SSL switch
- *  
+ *
  *  @discussion
  *	Creates an operation with the given URL path.
  *  The ssl option when true changes the URL to https.
@@ -132,13 +132,13 @@
  *  The previously mentioned methods operationWithPath: and operationWithPath:params: call this internally
  */
 -(MKNetworkOperation*) operationWithPath:(NSString*) path
-                         params:(NSDictionary*) body
-                   httpMethod:(NSString*)method 
-                          ssl:(BOOL) useSSL;
+                                  params:(NSDictionary*) body
+                              httpMethod:(NSString*)method
+                                     ssl:(BOOL) useSSL;
 
 /*!
  *  @abstract Creates a simple GET Operation with a request URL
- *  
+ *
  *  @discussion
  *	Creates an operation with the given absolute URL.
  *  The hostname of the engine is *NOT* prefixed
@@ -149,7 +149,7 @@
 
 /*!
  *  @abstract Creates a simple GET Operation with a request URL and parameters
- *  
+ *
  *  @discussion
  *	Creates an operation with the given absolute URL.
  *  The hostname of the engine is *NOT* prefixed
@@ -162,7 +162,7 @@
 
 /*!
  *  @abstract Creates a simple Operation with a request URL, parameters and HTTP Method
- *  
+ *
  *  @discussion
  *	Creates an operation with the given absolute URL.
  *  The hostname of the engine is *NOT* prefixed
@@ -175,12 +175,12 @@
  *  prepareHeaders:
  */
 -(MKNetworkOperation*) operationWithURLString:(NSString*) urlString
-                              params:(NSDictionary*) body
-                        httpMethod:(NSString*) method;
+                                       params:(NSDictionary*) body
+                                   httpMethod:(NSString*) method;
 
 /*!
  *  @abstract adds the custom default headers
- *  
+ *
  *  @discussion
  *	This method adds custom default headers to the factory created MKNetworkOperation.
  *	This method can be over-ridden by subclasses to add more default headers if necessary.
@@ -240,33 +240,35 @@
 
 /*!
  *  @abstract Enqueues your operation into the shared queue
- *  
+ *
  *  @discussion
  *	The operation you created is enqueued to the shared queue. If the response for this operation was previously cached, the cached data will be returned.
  *  @seealso
  *  enqueueOperation:forceReload:
  */
 -(void) enqueueOperation:(MKNetworkOperation*) request;
+-(void) enqueueHighPriorityOperation:(MKNetworkOperation*) request;
 
 /*!
  *  @abstract Enqueues your operation into the shared queue.
- *  
+ *
  *  @discussion
- *	The operation you created is enqueued to the shared queue. 
+ *	The operation you created is enqueued to the shared queue.
  *  When forceReload is NO, this method behaves like enqueueOperation:
  *  When forceReload is YES, No cached data will be returned even if cached data is available.
  *  @seealso
  *  enqueueOperation:
  */
 -(void) enqueueOperation:(MKNetworkOperation*) operation forceReload:(BOOL) forceReload;
+-(void) enqueueHighPriorityOperation:(MKNetworkOperation*) operation forceReload:(BOOL) forceReload;
 
 /*!
  *  @abstract HostName of the engine
  *  @property readonlyHostName
- *  
+ *
  *  @discussion
  *	Returns the host name of the engine
- *  This property is readonly cannot be updated. 
+ *  This property is readonly cannot be updated.
  *  You normally initialize an engine with its hostname using the initWithHostName:customHeaders: method
  */
 @property (readonly, copy, nonatomic) NSString *readonlyHostName;
@@ -274,7 +276,7 @@
 /*!
  *  @abstract Port Number that should be used by URL creating factory methods
  *  @property portNumber
- *  
+ *
  *  @discussion
  *	Set a port number for your engine if your remote URL mandates it.
  *  This property is optional and you DON'T have to specify the default HTTP port 80
@@ -293,9 +295,9 @@
 /*!
  *  @abstract Sets an api path if it is different from root URL
  *  @property apiPath
- *  
+ *
  *  @discussion
- *	You can use this method to set a custom path to the API location if your server's API path is different from root (/) 
+ *	You can use this method to set a custom path to the API location if your server's API path is different from root (/)
  *  This property is optional
  */
 @property (copy, nonatomic) NSString* apiPath;
@@ -303,7 +305,7 @@
 /*!
  *  @abstract Handler that you implement to monitor reachability changes
  *  @property reachabilityChangedHandler
- *  
+ *
  *  @discussion
  *	The framework calls this handler whenever the reachability of the host changes.
  *  The default implementation freezes the queued operations and stops network activity
@@ -313,7 +315,7 @@
 
 /*!
  *  @abstract Registers an associated operation subclass
- *  
+ *
  *  @discussion
  *	When you override both MKNetworkEngine and MKNetworkOperation, you might want the engine's factory method
  *  to prepare operations of your MKNetworkOperation subclass. To create your own MKNetworkOperation subclasses from the factory method, you can register your MKNetworkOperation subclass using this method.
@@ -323,7 +325,7 @@
 
 /*!
  *  @abstract Cache Directory Name
- *  
+ *
  *  @discussion
  *	This method can be over-ridden by subclasses to provide an alternative cache directory
  *  The default directory (MKNetworkKitCache) within the NSCaches directory will be used otherwise
@@ -333,7 +335,7 @@
 
 /*!
  *  @abstract Cache Directory In Memory Cost
- *  
+ *
  *  @discussion
  *	This method can be over-ridden by subclasses to provide an alternative in memory cache size.
  *  By default, MKNetworkKit caches 10 recent requests in memory
@@ -344,7 +346,7 @@
 
 /*!
  *  @abstract Enable Caching
- *  
+ *
  *  @discussion
  *	This method should be called explicitly to enable caching for this engine.
  *  By default, MKNetworkKit doens't cache your requests.
@@ -354,7 +356,7 @@
 
 /*!
  *  @abstract Empties previously cached data
- *  
+ *
  *  @discussion
  *	This method is a handy helper that you can use to clear cached data.
  *  By default, MKNetworkKit doens't cache your requests. Use this only when you enabled caching
@@ -365,7 +367,7 @@
 
 /*!
  *  @abstract Checks current reachable status
- *  
+ *
  *  @discussion
  *	This method is a handy helper that you can use to check for network reachability.
  */
